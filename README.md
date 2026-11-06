@@ -7,6 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: Switch](https://img.shields.io/badge/Platform-Switch%20AI-00f0ff.svg)](https://switch.ai)
 [![Integration: Discord](https://img.shields.io/badge/Integration-Discord%20Bot-5865F2.svg)](https://discord.com)
+[![Integration: Telegram](https://img.shields.io/badge/Integration-Telegram%20Bot-24A1DE.svg)](https://telegram.org)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://python.org)
 
 ---
@@ -84,7 +85,7 @@ flowchart TD
 
 ### 1. Clone & Setup Environment
 ```bash
-git clone https://github.com/your-username/omniforge.git
+git clone https://github.com/soojal-bhardwaj-27/omniforge.git
 cd omniforge
 cp .env.example .env
 ```
