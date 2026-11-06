@@ -6,6 +6,7 @@ load_dotenv()
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from database.session import init_db
@@ -96,6 +97,23 @@ async def health_check():
         "version": "1.0.0",
         "switch_gateway": "connected",
     }
+
+
+# Glowing Forge Favicon Endpoint
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    svg = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#5865F2"/>
+          <stop offset="100%" stop-color="#00F0FF"/>
+        </linearGradient>
+      </defs>
+      <rect width="100" height="100" rx="24" fill="#0e101c"/>
+      <path d="M50 18 L76 33 L76 67 L50 82 L24 67 L24 33 Z" fill="none" stroke="url(#g)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="14" fill="url(#g)"/>
+    </svg>"""
+    return Response(content=svg, media_type="image/svg+xml")
 
 # Mount workspaces for direct browser preview of generated apps
 if os.path.exists("./workspaces"):
