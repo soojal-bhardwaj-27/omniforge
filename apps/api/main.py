@@ -10,7 +10,7 @@ from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from database.session import init_db
-from apps.api.routes import missions, events, switch
+from apps.api.routes import missions, events, switch, connectors
 
 import asyncio
 from apps.api.dependencies import get_orchestrator, set_live_bridge
@@ -87,6 +87,7 @@ async def add_security_headers(request: Request, call_next):
 app.include_router(missions.router)
 app.include_router(events.router)
 app.include_router(switch.router)
+app.include_router(connectors.router)
 
 # Health Check Endpoint
 @app.get("/health")

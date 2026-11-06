@@ -3,62 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[OMNIFORGE] — Autonomous AI Workforce</title>
+  <title>[OMNIFORGE] — Autonomous AI Workforce Command Center</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;800&family=Oswald:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Bebas+Neue&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      /* Dynamic Theme Variables (Default: Discord Blurple) */
-      --theme-bg-start: #232742;
-      --theme-bg-end: #0e101c;
-      --theme-accent: #5865f2;
-      --theme-accent-secondary: #00f0ff;
-      --theme-glow: rgba(88, 101, 242, 0.45);
-      --text-white: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.75);
-      --font-display: 'Impact', 'Bebas Neue', 'Oswald', -apple-system, sans-serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* Theme 1: Cyberpunk Neon (Default) */
+      --bg-base: #06080d;
+      --bg-surface: rgba(14, 18, 27, 0.75);
+      --bg-surface-elevated: rgba(22, 28, 42, 0.85);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(0, 240, 255, 0.3);
+      --accent: #00f0ff;
+      --accent-secondary: #5865f2;
+      --accent-glow: rgba(0, 240, 255, 0.25);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-faint: #475569;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+    }
+
+    [data-theme="discord"] {
+      --bg-base: #0c0e17;
+      --bg-surface: rgba(19, 22, 38, 0.8);
+      --bg-surface-elevated: rgba(30, 35, 59, 0.9);
+      --border-glow: rgba(88, 101, 242, 0.4);
+      --accent: #5865f2;
+      --accent-secondary: #00f0ff;
+      --accent-glow: rgba(88, 101, 242, 0.3);
+    }
+
+    [data-theme="telegram"] {
+      --bg-base: #071018;
+      --bg-surface: rgba(12, 26, 40, 0.8);
+      --bg-surface-elevated: rgba(18, 38, 58, 0.9);
+      --border-glow: rgba(36, 161, 222, 0.4);
+      --accent: #24a1de;
+      --accent-secondary: #10b981;
+      --accent-glow: rgba(36, 161, 222, 0.3);
+    }
+
+    [data-theme="matrix"] {
+      --bg-base: #050a06;
+      --bg-surface: rgba(10, 22, 14, 0.8);
+      --bg-surface-elevated: rgba(16, 34, 22, 0.9);
+      --border-glow: rgba(16, 185, 129, 0.4);
+      --accent: #10b981;
+      --accent-secondary: #00f0ff;
+      --accent-glow: rgba(16, 185, 129, 0.3);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none;
-    }
-
-    html {
-      scroll-behavior: smooth;
     }
 
     body {
-      width: 100%;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
       min-height: 100vh;
       overflow-x: hidden;
-      overflow-y: auto;
-      font-family: var(--font-body);
-      color: var(--text-white);
-      background: radial-gradient(circle at 55% 45%, var(--theme-bg-start) 0%, var(--theme-bg-end) 100%);
-      transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(88, 101, 242, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
     }
 
-    /* Custom futuristic scrollbar */
-    body::-webkit-scrollbar {
-      width: 10px;
-    }
-    body::-webkit-scrollbar-track {
-      background: rgba(10, 11, 18, 0.95);
-    }
-    body::-webkit-scrollbar-thumb {
-      background: var(--theme-accent);
-      border-radius: 999px;
-    }
-
-    /* Ambient Canvas for Particle Sparks */
+    /* Ambient particles canvas */
     #particles-canvas {
       position: fixed;
       top: 0;
@@ -66,2036 +93,1851 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 1;
+      z-index: 0;
     }
 
-    .viewport-container {
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-full);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    .app-layout {
       position: relative;
-      width: 100%;
-      min-height: 100vh;
+      z-index: 1;
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 20px 32px 64px 32px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      padding: 24px 52px;
-      z-index: 10;
+      gap: 32px;
     }
 
-    /* 1. Header Navigation */
+    /* =========================================================================
+       1. TOP NAVBAR
+       ========================================================================= */
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      z-index: 40;
+      padding: 16px 24px;
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
-    .logo {
+    .brand-group {
       display: flex;
       align-items: center;
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.04em;
+      gap: 16px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
       text-decoration: none;
-      color: var(--text-white);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.45rem;
+      letter-spacing: -0.02em;
     }
 
     .logo-bracket {
-      border-left: 3px solid #fff;
-      border-top: 3px solid #fff;
-      border-bottom: 3px solid #fff;
-      padding: 2px 0 2px 6px;
-      margin-right: 2px;
+      color: var(--accent);
+      margin: 0 1px;
     }
 
-    .logo-bracket-right {
-      border-right: 3px solid #fff;
-      border-top: 3px solid #fff;
-      border-bottom: 3px solid #fff;
-      padding: 2px 6px 2px 0;
-      margin-left: 2px;
-    }
-
-    .nav-center-toggle {
-      display: flex;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      padding: 4px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .toggle-pill {
-      padding: 6px 20px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.8);
-      transition: all 0.2s ease;
-      text-decoration: none;
-    }
-
-    .toggle-pill.active,
-    .toggle-pill:hover {
-      background: #ffffff;
-      color: #111111;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .nav-link {
-      color: var(--text-white);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      opacity: 0.85;
-      transition: opacity 0.2s ease;
-    }
-
-    .nav-link:hover {
-      opacity: 1;
-    }
-
-    .btn-launch-mission {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #ffffff;
-      color: #111111;
-      padding: 10px 24px;
-      border-radius: 999px;
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
       font-weight: 700;
-      font-size: 0.9rem;
-      text-decoration: none;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-      transition: all 0.2s ease;
-      border: none;
-      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      background: rgba(0, 240, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .btn-launch-mission:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-    }
-
-    /* 2. Hero Centerpiece Stage */
-    .hero-stage {
-      position: relative;
-      flex: 1;
+    .system-status-strip {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 1480px;
-      margin: 0 auto;
+      gap: 20px;
+      padding: 6px 16px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
     }
 
-    /* Left Hero Editorial */
-    .hero-left {
-      max-width: 440px;
-      z-index: 25;
-    }
-
-    .hero-badge {
-      display: inline-flex;
+    .status-item {
+      display: flex;
       align-items: center;
       gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--theme-accent-secondary);
-      background: rgba(255, 255, 255, 0.06);
-      padding: 4px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      margin-bottom: 20px;
+      color: var(--text-muted);
     }
 
-    .pulse-dot {
+    .status-dot {
       width: 8px;
       height: 8px;
-      background: #10b981;
       border-radius: 50%;
-      box-shadow: 0 0 8px #10b981;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+      animation: pulseGlow 2s infinite ease-in-out;
     }
 
-    .title-forge {
-      font-family: var(--font-display);
-      font-size: clamp(3rem, 4.5vw, 4.2rem);
-      font-weight: 900;
-      line-height: 0.96;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      text-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    .status-dot.warning {
+      background: var(--warning);
+      box-shadow: 0 0 10px var(--warning);
     }
 
-    .hero-description {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: var(--text-muted);
-      font-weight: 400;
-      margin-bottom: 20px;
+    .status-dot.danger {
+      background: var(--danger);
+      box-shadow: 0 0 10px var(--danger);
     }
 
-    /* Quick Launch Bar */
-    .quick-launch-bar {
-      display: flex;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 6px;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.9); }
     }
 
-    .quick-launch-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      padding: 10px 16px;
-      color: #ffffff;
-      font-family: var(--font-sans);
-      font-size: 0.95rem;
-    }
-
-    .quick-launch-input:focus {
-      outline: none;
-    }
-
-    .quick-launch-btn {
-      background: var(--theme-accent);
-      color: #ffffff;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
+    .nav-actions {
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      box-shadow: 0 0 15px var(--theme-glow);
-    }
-
-    .quick-launch-btn:hover {
-      transform: scale(1.03);
-    }
-
-    /* Center 3D Stage with Giant Typography */
-    .center-stage {
-      position: absolute;
-      top: 50%;
-      left: 52%;
-      transform: translate(-50%, -50%);
-      width: 760px;
-      height: 540px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      z-index: 15;
-    }
-
-    /* Giant 3D "FORGE" Backdrop */
-    .giant-forge-text {
-      position: absolute;
-      font-family: var(--font-display);
-      font-size: 19rem;
-      font-weight: 900;
-      letter-spacing: -0.05em;
-      color: #ffffff;
-      line-height: 0.8;
-      z-index: 10;
-      text-shadow: 
-        0 20px 50px rgba(0, 0, 0, 0.4),
-        0 4px 8px rgba(0, 0, 0, 0.2);
-      transform: perspective(1000px) rotateX(4deg);
-      transition: transform 0.3s ease;
-    }
-
-    /* Floating 3D Connector Core (Replaces Sneaker) */
-    .connector-core-wrapper {
-      position: absolute;
-      z-index: 25;
-      width: 480px;
-      height: 480px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: auto;
-      cursor: grab;
-      transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      animation: floatCore 4s ease-in-out infinite alternate;
-    }
-
-    .connector-core-wrapper:active {
-      cursor: grabbing;
-    }
-
-    @keyframes floatCore {
-      0% { transform: translate(0px, 0px) rotate(-10deg); }
-      100% { transform: translate(0px, -20deg) rotate(-6deg); }
-    }
-
-    /* 3D Connector Hardware Graphic */
-    .core-svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 35px 50px rgba(0, 0, 0, 0.55)) drop-shadow(0 10px 20px var(--theme-glow));
-      transition: filter 0.5s ease;
-    }
-
-    .core-accent {
-      transition: fill 0.5s ease, stroke 0.5s ease;
-    }
-
-    /* Right Interactive Controls */
-    .hero-right-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      z-index: 25;
-      align-items: flex-end;
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
       gap: 12px;
     }
 
-    .control-label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.85);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* Connector Swatches (Discord, Telegram, Slack, Switch) */
-    .connector-swatches {
-      display: flex;
-      gap: 14px;
-    }
-
-    .connector-swatch {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
+    .btn {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      gap: 8px;
+      padding: 9px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      outline: none;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-vault {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-vault:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent);
+      box-shadow: 0 0 16px var(--accent-glow);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      color: #05070e;
+      font-weight: 700;
+      box-shadow: 0 4px 18px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 6px 24px var(--accent-glow);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .theme-select {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .theme-select option {
+      background: #0f131f;
+      color: #fff;
+    }
+
+    /* =========================================================================
+       2. HERO COMMAND STAGE
+       ========================================================================= */
+    .hero-stage {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-secondary) 50%, transparent 100%);
+    }
+
+    .hero-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(0, 240, 255, 0.08);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-full);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 3.1rem;
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.65) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.02rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+      max-width: 620px;
+    }
+
+    /* Dispatch Command Center */
+    .dispatch-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
       position: relative;
     }
 
-    .connector-swatch:hover {
-      transform: scale(1.15);
+    .dispatch-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
-    .connector-swatch.active {
-      transform: scale(1.22);
-      box-shadow: 0 0 0 3px #ffffff, 0 8px 24px rgba(0, 0, 0, 0.45);
-    }
-
-    .swatch-discord { background: #5865f2; }
-    .swatch-telegram { background: #229ed9; }
-    .swatch-slack { background: #ecb22e; }
-    .swatch-switch { background: #00f0ff; color: #000; }
-
-    /* Coding Agent Engine Selectors (Replaces Sizes) */
-    .engine-selector {
+    .dispatch-input-row {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      align-items: center;
     }
 
-    .engine-pill {
-      padding: 10px 18px;
-      border-radius: 999px;
-      border: 1.5px solid rgba(255, 255, 255, 0.3);
-      font-size: 0.85rem;
-      font-weight: 700;
+    .dispatch-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-family: var(--font-sans);
+    }
+
+    .dispatch-input::placeholder {
+      color: var(--text-faint);
+    }
+
+    .dispatch-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .preset-label {
       font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .preset-chip {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.76rem;
       cursor: pointer;
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(8px);
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
-    .engine-pill:hover {
-      border-color: #ffffff;
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
+    .preset-chip:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: var(--accent);
     }
 
-    .engine-pill.active {
-      background: #ffffff;
-      color: #111111;
-      border-color: #ffffff;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-      transform: scale(1.05);
-    }
-
-    /* 3. Bottom Bar */
-    .footer-bar {
+    .dispatch-options-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      width: 100%;
-      z-index: 40;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 12px;
     }
 
-    .workforce-pills {
+    .opt-group {
       display: flex;
-      gap: 14px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .opt-select {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      outline: none;
+    }
+
+    /* Live Workforce Pulse Card (Right side of hero) */
+    .pulse-panel {
+      background: var(--bg-surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .connector-mini-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .mini-card {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mini-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+
+    .mini-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mini-card-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-card-val {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .badge-live {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .badge-sim {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    .active-mission-banner {
+      background: rgba(0, 240, 255, 0.05);
+      border: 1px dashed var(--border-glow);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .banner-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
+      transition: width 0.4s ease;
+    }
+
+    /* =========================================================================
+       3. 6 SPECIALIZED AGENTS WORKFORCE GRID
+       ========================================================================= */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+
+    .agents-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1280px) {
+      .agents-grid { grid-template-columns: repeat(3, 1fr); }
+      .hero-stage { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .agents-grid { grid-template-columns: repeat(2, 1fr); }
+      .system-status-strip { display: none; }
+    }
+    @media (max-width: 520px) {
+      .agents-grid { grid-template-columns: 1fr; }
+    }
+
+    .agent-card {
+      background: var(--bg-surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s ease;
+    }
+
+    .agent-card:hover {
+      border-color: var(--border-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+    }
+
+    .agent-card.running {
+      border-color: var(--accent);
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+
+    .agent-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .agent-icon {
+      font-size: 1.5rem;
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .agent-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .agent-role {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      min-height: 38px;
     }
 
     .agent-status-badge {
-      display: flex;
-      align-items: center;
-      gap: 6px;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 4px 12px;
-      border-radius: 999px;
-      color: rgba(255, 255, 255, 0.9);
-    }
-
-    /* Scroll Down Indicator Button */
-    .scroll-down-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-decoration: none;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 8px 22px;
-      border-radius: 999px;
-      transition: all 0.25s ease;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-    }
-
-    .scroll-down-btn:hover {
-      background: var(--theme-accent);
-      border-color: var(--theme-accent);
-      transform: translateY(2px);
-      box-shadow: 0 0 25px var(--theme-glow);
-      color: #ffffff;
-    }
-
-    .scroll-mouse-icon {
-      width: 14px;
-      height: 22px;
-      border: 2px solid #ffffff;
-      border-radius: 8px;
-      position: relative;
-      display: inline-block;
-    }
-
-    .scroll-wheel {
-      width: 2px;
-      height: 5px;
-      background: #ffffff;
-      position: absolute;
-      top: 4px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 2px;
-      animation: scrollWheelPulse 1.6s infinite ease-in-out;
-    }
-
-    @keyframes scrollWheelPulse {
-      0% { transform: translate(-50%, 0); opacity: 1; }
-      50% { transform: translate(-50%, 6px); opacity: 0.2; }
-      100% { transform: translate(-50%, 0); opacity: 1; }
-    }
-
-    .scroll-arrow {
-      animation: bounceArrow 1.6s infinite ease-in-out;
-    }
-
-    @keyframes bounceArrow {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(4px); }
-    }
-
-    .btn-toggle-console {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: var(--text-white);
-      padding: 10px 22px;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-toggle-console:hover {
-      background: #ffffff;
-      color: #111111;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Below-the-Fold Dashboard Sections */
-    .dashboard-sections-wrapper {
-      position: relative;
-      z-index: 10;
-      background: rgba(10, 12, 19, 0.96);
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(24px);
-      padding: 70px 0 100px;
-    }
-
-    .content-section {
-      max-width: 1440px;
-      margin: 0 auto 90px auto;
-      padding: 0 48px;
-    }
-
-    .section-header-box {
-      margin-bottom: 36px;
-    }
-
-    .section-pill-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--theme-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      font-size: 0.68rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      padding: 4px 14px;
-      border-radius: 999px;
-      margin-bottom: 12px;
-    }
-
-    .section-heading-lg {
-      font-family: var(--font-display);
-      font-size: 3.2rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      line-height: 1;
-      margin-bottom: 12px;
-    }
-
-    .section-subtitle-p {
       color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 680px;
-      line-height: 1.6;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      width: fit-content;
     }
 
-    /* 6 Specialized Agent Cards Grid */
-    .workforce-grid {
+    .agent-status-badge.active {
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+    }
+
+    .agent-status-badge.completed {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    /* =========================================================================
+       4. TELEMETRY & SHARED ROOM SPLIT VIEW
+       ========================================================================= */
+    .telemetry-split {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
 
-    .agent-spec-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 18px;
-      padding: 28px;
-      transition: all 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
+    @media (max-width: 990px) {
+      .telemetry-split { grid-template-columns: 1fr; }
     }
 
-    .agent-spec-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--theme-accent);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .agent-card-icon {
-      font-size: 2.2rem;
-      margin-bottom: 14px;
-      display: inline-block;
-    }
-
-    .agent-card-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-      margin-bottom: 8px;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .agent-card-badge {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--theme-accent);
-    }
-
-    .agent-card-desc {
-      color: var(--text-muted);
-      font-size: 0.92rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .agent-card-duties {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: #cbd5e1;
-    }
-
-    .agent-card-duties li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .agent-card-duties li::before {
-      content: '▹';
-      color: var(--theme-accent);
-      font-weight: bold;
-    }
-
-    /* Platform Transports Grid */
-    .platforms-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .platform-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 16px;
-      transition: all 0.25s ease;
-    }
-
-    .platform-card:hover {
-      transform: translateY(-3px);
-      border-color: var(--theme-accent);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-    }
-
-    .platform-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .platform-name {
-      font-size: 1.2rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .platform-status-badge {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    /* Deliverables Grid */
-    .deliverables-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 20px;
-    }
-
-    .deliverable-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      transition: all 0.25s ease;
-    }
-
-    .deliverable-card:hover {
-      border-color: var(--theme-accent);
-      transform: translateY(-3px);
-    }
-
-    .deliverable-cta-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--theme-accent);
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.85rem;
-      transition: all 0.2s ease;
-    }
-
-    .deliverable-cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px var(--theme-glow);
-    }
-
-    /* Footer Credits */
-    .site-footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 40px 48px;
-      max-width: 1440px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .btn-back-to-top {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      padding: 8px 18px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-back-to-top:hover {
-      background: var(--theme-accent);
-      border-color: var(--theme-accent);
-    }
-
-    /* Live Telemetry Drawer Modal */
-    .telemetry-drawer {
-      position: fixed;
-      bottom: -460px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 1200px;
-      height: 420px;
-      background: #0d0f17;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.7);
-      z-index: 100;
-      transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
+    .console-panel {
+      background: rgba(10, 13, 20, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 380px;
     }
 
-    .telemetry-drawer.open {
-      bottom: 0;
-    }
-
-    .drawer-header {
-      padding: 14px 24px;
-      background: #141724;
+    .console-header {
+      padding: 12px 18px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .drawer-title {
-      font-size: 0.95rem;
-      font-weight: 700;
       font-family: var(--font-mono);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 0.8rem;
     }
 
-    .drawer-close {
-      background: transparent;
-      border: none;
-      color: #ffffff;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    .drawer-body {
+    .console-body {
       flex: 1;
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      padding: 16px 24px;
-      gap: 20px;
-      overflow: hidden;
-    }
-
-    .drawer-logs {
-      background: #08090e;
-      border-radius: 12px;
-      padding: 14px;
+      padding: 16px;
       overflow-y: auto;
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      line-height: 1.5;
     }
 
-    .log-item {
+    .log-entry {
       display: flex;
-      gap: 8px;
-      border-left: 2px solid var(--theme-accent);
+      gap: 10px;
+      align-items: flex-start;
+      border-left: 2px solid transparent;
       padding-left: 8px;
     }
 
-    .log-agent {
-      font-weight: 700;
-      color: var(--theme-accent);
-    }
+    .log-entry.COMMANDER { border-color: #5865f2; }
+    .log-entry.DEVELOPER { border-color: #00f0ff; }
+    .log-entry.TESTER { border-color: #10b981; }
+    .log-entry.SECURITY { border-color: #f59e0b; }
+    .log-entry.ERROR { border-color: #ef4444; }
 
-    .drawer-artifacts {
+    .log-time { color: var(--text-faint); font-size: 0.72rem; }
+    .log-agent { color: var(--accent); font-weight: 700; min-width: 85px; }
+
+    /* Switch Shared Room Chat */
+    .chat-bubble {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
+      gap: 4px;
     }
 
-    .artifact-card {
-      background: #141724;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.85rem;
-      font-family: var(--font-mono);
+    .chat-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Simulator Bar & Quick Channels */
-    .simulator-trigger-bar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
-
-    .sim-label {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-right: 4px;
-    }
-
-    .btn-sim-channel {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 999px;
-      color: #ffffff;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(8px);
-    }
-
-    .btn-sim-channel:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-sim-telegram:hover {
-      background: rgba(34, 158, 217, 0.25);
-      border-color: #229ed9;
-    }
-
-    .btn-sim-discord:hover {
-      background: rgba(88, 101, 242, 0.25);
-      border-color: #5865f2;
-    }
-
-    .btn-sim-slack:hover {
-      background: rgba(236, 178, 46, 0.25);
-      border-color: #ecb22e;
-    }
-
-    .btn-sim-switch:hover {
-      background: rgba(0, 240, 255, 0.25);
-      border-color: #00f0ff;
-    }
-
-    /* Preset Chips */
-    .preset-chips {
-      display: flex;
-      gap: 6px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .chip-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 4px 10px;
       font-size: 0.74rem;
-      color: #cbd5e1;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      font-family: var(--font-mono);
     }
 
-    .chip-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-      transform: scale(1.02);
-    }
-
-    /* Status Pill in Navbar */
-    .status-badge-engine {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-family: var(--font-mono);
-      color: #34d399;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-
-    .status-badge-engine:hover {
-      background: rgba(16, 185, 129, 0.22);
-      border-color: #34d399;
-    }
-
-    /* Preview CTA Card */
-    .preview-cta-card {
-      background: linear-gradient(135deg, rgba(0, 240, 255, 0.15), rgba(88, 101, 242, 0.15));
-      border: 1px solid var(--theme-accent);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      box-shadow: 0 0 20px var(--theme-glow);
-    }
-
-    .preview-cta-title {
-      font-size: 0.85rem;
+    .platform-tag {
+      padding: 1px 6px;
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
       font-weight: 700;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
-    .btn-preview-live {
-      background: var(--theme-accent);
-      color: #ffffff;
-      text-decoration: none;
-      text-align: center;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: all 0.2s ease;
-    }
+    .platform-tag.telegram { background: #24a1de; color: #fff; }
+    .platform-tag.discord { background: #5865f2; color: #fff; }
+    .platform-tag.slack { background: #4a154b; color: #fff; border: 1px solid rgba(255,255,255,0.2); }
 
-    .btn-preview-live:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px var(--theme-glow);
-    }
-
-    /* Token & Docker Status Modal */
+    /* =========================================================================
+       5. FULL CONNECTORS & SECRETS VAULT MODAL
+       ========================================================================= */
     .modal-overlay {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 100;
+      padding: 24px;
     }
 
     .modal-overlay.active {
       display: flex;
     }
 
-    .modal-card {
-      background: #0f121d;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      width: 90%;
-      max-width: 580px;
-      padding: 24px;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    .vault-modal {
+      background: #0d111a;
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 880px;
+      max-height: 90vh;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 40px var(--accent-glow);
+      overflow: hidden;
+      animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .modal-header {
+    @keyframes modalSlide {
+      from { opacity: 0; transform: scale(0.96) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .vault-header {
+      padding: 20px 28px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
     }
 
-    .modal-title {
-      font-size: 1.15rem;
+    .vault-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
       font-weight: 700;
       display: flex;
       align-items: center;
+      gap: 10px;
+    }
+
+    .vault-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 10px 28px;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow-x: auto;
+    }
+
+    .vault-tab {
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .vault-tab:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .vault-tab.active {
+      color: #05070e;
+      background: var(--accent);
+      font-weight: 700;
+    }
+
+    .vault-body {
+      padding: 28px;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tab-content {
+      display: none;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .tab-content.active {
+      display: flex;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .input-row {
+      display: flex;
       gap: 8px;
     }
 
-    .modal-close-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.2rem;
-      cursor: pointer;
+    .form-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.2s ease;
     }
 
-    .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.03);
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .btn-test {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0 16px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .btn-test:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .test-result-box {
       padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      display: none;
+    }
+
+    .test-result-box.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+    }
+
+    .test-result-box.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+    }
+
+    .vault-footer {
+      padding: 18px 28px;
+      background: rgba(0, 0, 0, 0.35);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Floating Toast */
+    #toast-msg {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--accent);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+      color: #fff;
+      font-size: 0.88rem;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 200;
+      animation: toastIn 0.2s ease;
+    }
+
+    @keyframes toastIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <!-- Canvas for dynamic sparks & particle field -->
+  <!-- Ambient particles canvas -->
   <canvas id="particles-canvas"></canvas>
 
-  <div class="viewport-container" id="app-container">
-    <!-- 1. Header Navigation -->
+  <div class="app-layout">
+    <!-- 1. TOP NAVBAR -->
     <header class="navbar">
-      <a href="#" class="logo">
-        <span class="logo-bracket">[</span>OMNIFORGE<span class="logo-bracket-right">]</span>
-      </a>
-
-      <!-- Center Segmented Pill -->
-      <div class="nav-center-toggle">
-        <a href="#workforce-section" class="toggle-pill active" id="tab-workforce" onclick="smoothScrollTo('workforce-section')">Workforce</a>
-        <a href="#platforms-section" class="toggle-pill" id="tab-platforms" onclick="smoothScrollTo('platforms-section')">Platforms</a>
-        <a href="#deliverables-section" class="toggle-pill" id="tab-deliverables" onclick="smoothScrollTo('deliverables-section')">Deliverables</a>
-        <a href="/planet" target="_blank" class="toggle-pill">Sneaker [Ref] ↗</a>
-        <a href="/preview" target="_blank" class="toggle-pill">Artifacts ↗</a>
+      <div class="brand-group">
+        <a href="/" class="brand-logo">
+          <span class="logo-bracket">[</span>OMNIFORGE<span class="logo-bracket">]</span>
+        </a>
+        <span class="brand-badge">Autonomous Workforce v1.2</span>
       </div>
 
-      <!-- Right Nav Links & Launch Button -->
-      <div class="nav-right">
-        <button class="status-badge-engine" onclick="openTokensModal()">
-          <span class="pulse-dot"></span>
-          <span id="nav-bot-status">🟢 Live: @rio_claw_bot · rio-dev</span>
+      <div class="system-status-strip">
+        <div class="status-item">
+          <span class="status-dot" id="dot-gateway"></span>
+          <span>Switch Gateway: <strong id="lbl-gateway-status" style="color:var(--text-main);">ONLINE</strong></span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot" id="dot-bridge"></span>
+          <span>Bridges: <strong id="lbl-bridge-status" style="color:var(--text-main);">@rio_claw_bot · LIVE</strong></span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot" id="dot-sandbox"></span>
+          <span>Sandbox: <strong style="color:var(--text-main);">LEVEL 7 ISOLATION</strong></span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <select class="theme-select" id="theme-selector" onchange="changeTheme(this.value)">
+          <option value="cyberpunk">⚡ Cyberpunk Cyan</option>
+          <option value="discord">👾 Discord Blurple</option>
+          <option value="telegram">✈️ Telegram Aerospace</option>
+          <option value="matrix">🧪 Emerald Matrix</option>
+        </select>
+
+        <button class="btn btn-vault" onclick="openVaultModal()">
+          <span>⚙️ Connectors & API Keys</span>
+          <span class="badge-live" id="active-connectors-count">3 Live</span>
         </button>
-        <button class="btn-launch-mission" onclick="openDispatchModal()">
-          <span>Dispatch Mission</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
+
+        <a href="/planet" target="_blank" class="btn btn-vault btn-sm" title="Planet Sneakers Reference Design">
+          👟 Sneaker [Ref] ↗
+        </a>
       </div>
     </header>
 
-    <!-- 2. Hero Centerpiece Stage -->
+    <!-- 2. HERO COMMAND STAGE -->
     <main class="hero-stage">
-      <!-- Left Editorial Copy -->
-      <div class="hero-left">
-        <div class="hero-badge">
-          <span class="pulse-dot"></span>
-          <span id="badge-connector-text">SWITCH GATEWAY · DISCORD BOT ONLINE</span>
-        </div>
-        <h1 class="title-forge">
-          ONE COMMAND.<br>
-          INFINITE EXECUTION.
-        </h1>
-        <p class="hero-description">
-          Transform your team chat into an autonomous AI engineering department. Choose your messaging platform connector, select your coding agent, and dispatch real tasks with mathematical proof of completion.
-        </p>
+      <div class="hero-card">
+        <div>
+          <div class="hero-badge-pill">
+            <span class="status-dot"></span>
+            <span id="hero-status-pill">FLIP THE SWITCH · MULTI-AGENT SWARM READY</span>
+          </div>
 
-        <!-- Quick Launch Command Bar -->
-        <div class="quick-launch-bar">
-          <input 
-            type="text" 
-            id="quick-prompt"
-            class="quick-launch-input" 
-            placeholder="Assign mission to workforce..." 
-            value="Build a high-performance cybernetic sneakers product landing page with 3D tilt effects and responsive cart checkout"
-          />
-          <button class="quick-launch-btn" onclick="dispatchQuickMission()">
-            <span>Execute</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
+          <h1 class="hero-title">
+            ONE COMMAND.<br>
+            <span>INFINITE EXECUTION.</span>
+          </h1>
+
+          <p class="hero-subtitle">
+            Configure your team's live messaging connectors, input your custom provider API keys, and dispatch full software engineering missions with AST-verified delivery.
+          </p>
         </div>
 
-        <!-- Cross-Platform Shared Room Trigger Bar -->
-        <div class="simulator-trigger-bar">
-          <span class="sim-label">⚡ Trigger Via:</span>
-          <button class="btn-sim-channel btn-sim-telegram" onclick="simulatePlatform('telegram')">
-            ✈️ Telegram Bot
-          </button>
-          <button class="btn-sim-channel btn-sim-discord" onclick="simulatePlatform('discord')">
-            👾 Discord Bot
-          </button>
-          <button class="btn-sim-channel btn-sim-slack" onclick="simulatePlatform('slack')">
-            💬 Slack App
-          </button>
-          <button class="btn-sim-channel btn-sim-switch" onclick="simulatePlatform('switch')">
-            ⚡ Switch Room
-          </button>
-        </div>
+        <!-- Intelligent Dispatch Box -->
+        <div class="dispatch-box">
+          <div class="dispatch-input-row">
+            <input 
+              type="text" 
+              id="mission-prompt" 
+              class="dispatch-input" 
+              placeholder="Assign software engineering mission to autonomous workforce..."
+              value="Build a modern dark-mode portfolio for a design engineer with smooth micro-interactions, tokenized design, and automated test suite"
+            />
+            <button class="btn btn-primary" onclick="dispatchMission()">
+              <span>🚀 Dispatch Mission</span>
+            </button>
+          </div>
 
-        <!-- Preset Chips -->
-        <div class="preset-chips">
-          <span class="chip-item" onclick="setPresetPrompt('Build a high-performance cybernetic sneakers product landing page with 3D tilt effects and responsive cart checkout')">👟 Sneaker Landing</span>
-          <span class="chip-item" onclick="setPresetPrompt('Build a real-time DeFi liquidity pool dashboard with yield metrics and wallet connect modal')">📈 DeFi Vault</span>
-          <span class="chip-item" onclick="setPresetPrompt('Build an AI agent playground with live prompt execution, token usage telemetry, and model comparison')">🤖 AI Agent Hub</span>
-        </div>
-      </div>
+          <div class="dispatch-presets">
+            <span class="preset-label">Presets:</span>
+            <span class="preset-chip" onclick="applyPreset('Build a modern dark-mode portfolio for a design engineer with 60fps micro-interactions')">🎨 Design Engineer Portfolio</span>
+            <span class="preset-chip" onclick="applyPreset('Build a high-performance cybernetic sneakers product showcase with 3D tilt and responsive checkout')">👟 Cybernetic Sneaker Store</span>
+            <span class="preset-chip" onclick="applyPreset('Build a real-time crypto trading terminal with live candlestick charting and orderbook depth')">📊 Crypto Terminal</span>
+            <span class="preset-chip" onclick="applyPreset('Build an autonomous AI agent workflow canvas with drag-and-drop node execution')">🧠 AI Workflow Canvas</span>
+          </div>
 
-      <!-- Center 3D Stage with Giant "FORGE" Backdrop -->
-      <div class="center-stage">
-        <div class="giant-forge-text" id="forge-bg">FORGE</div>
-
-        <!-- Floating 3D Connector Core (Interactive Hardware Hub) -->
-        <div class="connector-core-wrapper" id="core-wrapper">
-          <svg class="core-svg" viewBox="0 0 600 480" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="chassisGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#1e2235"/>
-                <stop offset="50%" stop-color="#121422"/>
-                <stop offset="100%" stop-color="#0a0b14"/>
-              </linearGradient>
-              <linearGradient id="corePulseGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
-                <stop offset="100%" stop-color="#00f0ff" stop-opacity="0.1"/>
-              </linearGradient>
-              <filter id="coreGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="14" result="blur"/>
-                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-              </filter>
-            </defs>
-
-            <!-- Holographic Base & Suspension Ring -->
-            <g transform="translate(40, 20)">
-              <!-- Outer Quantum Ring -->
-              <ellipse cx="260" cy="240" rx="220" ry="110" fill="none" class="core-accent" stroke="#5865f2" stroke-width="4" stroke-dasharray="16,8" opacity="0.8" />
-              <ellipse cx="260" cy="240" rx="190" ry="95" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
-
-              <!-- Main Floating Node Chassis -->
-              <path fill="url(#chassisGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="2" d="M 120 220 L 260 140 L 400 220 L 260 300 Z" />
-              <path fill="url(#chassisGrad)" stroke="rgba(255,255,255,0.15)" stroke-width="2" d="M 120 220 L 260 300 L 260 360 L 120 280 Z" />
-              <path fill="#0d0e18" stroke="rgba(255,255,255,0.15)" stroke-width="2" d="M 260 300 L 400 220 L 400 280 L 260 360 Z" />
-
-              <!-- Glowing Connector Power Core -->
-              <circle cx="260" cy="220" r="52" class="core-accent" fill="#5865f2" filter="url(#coreGlow)" opacity="0.95" />
-              <circle cx="260" cy="220" r="32" fill="#ffffff" opacity="0.9"/>
-
-              <!-- Dynamic Connector Platform Icon Embedded in Center -->
-              <g id="connector-icon-g" transform="translate(244, 204) scale(1.35)">
-                <!-- Discord Default Icon -->
-                <path id="core-icon-path" fill="#5865f2" d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.08-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.01.02.05.03.07.02 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12 0 1.17-.83 2.12-1.89 2.12z"/>
-              </g>
-
-              <!-- Orbital Agent Orbit Nodes -->
-              <g id="orbital-nodes">
-                <!-- Commander -->
-                <circle cx="100" cy="180" r="10" fill="#00f0ff" opacity="0.8"/>
-                <line x1="100" y1="180" x2="210" y2="200" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
-                <!-- Architect -->
-                <circle cx="420" cy="160" r="10" fill="#8b5cf6" opacity="0.8"/>
-                <line x1="420" y1="160" x2="310" y2="200" stroke="#8b5cf6" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
-                <!-- Developer -->
-                <circle cx="260" cy="380" r="12" class="core-accent" fill="#5865f2" opacity="0.85"/>
-                <line x1="260" y1="380" x2="260" y2="270" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6"/>
-              </g>
-            </g>
-          </svg>
-        </div>
-      </div>
-
-      <!-- Right Interactive Selectors -->
-      <div class="hero-right-controls">
-        <!-- Connector Platform Switcher -->
-        <div class="control-group">
-          <span class="control-label">Choose Connector</span>
-          <div class="connector-swatches">
-            <div class="connector-swatch swatch-discord active" onclick="setConnector('discord')" title="Discord Bot">
-              👾
+          <div class="dispatch-options-row">
+            <div class="opt-group">
+              <span>Target Channel:</span>
+              <select class="opt-select" id="dispatch-channel">
+                <option value="telegram">✈️ Telegram (@rio_claw_bot)</option>
+                <option value="discord">👾 Discord (#dev-forge)</option>
+                <option value="slack">💬 Slack (#rio-devteam)</option>
+                <option value="web">🌐 Web Mission Control</option>
+              </select>
             </div>
-            <div class="connector-swatch swatch-telegram" onclick="setConnector('telegram')" title="Telegram Bot">
-              ✈️
+
+            <div class="opt-group">
+              <span>Coding Driver:</span>
+              <select class="opt-select" id="dispatch-driver">
+                <option value="opencode">OpenCode Hybrid (Recommended)</option>
+                <option value="codex">Codex Driver</option>
+                <option value="mock">Autonomous Agent Engine</option>
+              </select>
             </div>
-            <div class="connector-swatch swatch-slack" onclick="setConnector('slack')" title="Slack App">
-              💬
-            </div>
-            <div class="connector-swatch swatch-switch" onclick="setConnector('switch')" title="Switch AI Gateway">
-              ⚡
+
+            <div class="opt-group">
+              <span>Security Level:</span>
+              <select class="opt-select" id="dispatch-level">
+                <option value="7">Level 7: Auto-Sandbox + Gate</option>
+                <option value="5">Level 5: Approval Required</option>
+                <option value="0">Level 0: Read-Only Audit</option>
+              </select>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Coding Agent Engine Selectors -->
-        <div class="control-group">
-          <span class="control-label">Coding Engine</span>
-          <div class="engine-selector">
-            <div class="engine-pill active" onclick="selectEngine(this, 'hybrid')">Hybrid</div>
-            <div class="engine-pill" onclick="selectEngine(this, 'opencode')">OpenCode</div>
-            <div class="engine-pill" onclick="selectEngine(this, 'codex')">Codex</div>
-            <div class="engine-pill" onclick="selectEngine(this, 'ollama')">Local</div>
+      <!-- Live Pulse Panel -->
+      <div class="pulse-panel">
+        <div>
+          <div class="panel-header">
+            <div class="panel-title">
+              <span>⚡</span>
+              <span>Connectors & Live Gateways</span>
+            </div>
+            <button class="btn btn-sm btn-vault" onclick="openVaultModal()">Manage Keys</button>
+          </div>
+          <p style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">
+            Live bidirectional connectors synced via Switch Shared Room
+          </p>
+        </div>
+
+        <div class="connector-mini-cards">
+          <!-- Telegram -->
+          <div class="mini-card" onclick="openVaultModal('telegram')">
+            <div class="mini-card-head">
+              <span class="mini-card-name">✈️ Telegram</span>
+              <span class="badge-live" id="badge-tg-status">● LIVE</span>
+            </div>
+            <span class="mini-card-val" id="val-tg-user">@rio_claw_bot</span>
+            <span style="font-size:0.72rem; color:var(--accent);">Click to configure token ↗</span>
+          </div>
+
+          <!-- Discord -->
+          <div class="mini-card" onclick="openVaultModal('discord')">
+            <div class="mini-card-head">
+              <span class="mini-card-name">👾 Discord</span>
+              <span class="badge-live" id="badge-discord-status">● LIVE</span>
+            </div>
+            <span class="mini-card-val" id="val-discord-user">rio-dev#2111</span>
+            <span style="font-size:0.72rem; color:var(--accent);">Click to configure token ↗</span>
+          </div>
+
+          <!-- Slack -->
+          <div class="mini-card" onclick="openVaultModal('slack')">
+            <div class="mini-card-head">
+              <span class="mini-card-name">💬 Slack</span>
+              <span class="badge-sim" id="badge-slack-status">SIMULATOR</span>
+            </div>
+            <span class="mini-card-val">#rio-devteam</span>
+            <span style="font-size:0.72rem; color:var(--accent);">Click to configure webhook ↗</span>
+          </div>
+
+          <!-- Switch AI -->
+          <div class="mini-card" onclick="openVaultModal('switch')">
+            <div class="mini-card-head">
+              <span class="mini-card-name">🔄 Switch AI</span>
+              <span class="badge-live" id="badge-switch-status">MESH ONLINE</span>
+            </div>
+            <span class="mini-card-val">Shared Room #rio-devteam</span>
+            <span style="font-size:0.72rem; color:var(--accent);">Click to set API Key ↗</span>
+          </div>
+        </div>
+
+        <!-- Latest Deliverable Status -->
+        <div class="active-mission-banner" id="deliverable-banner">
+          <div class="banner-head">
+            <span style="font-family:var(--font-mono); font-size:0.78rem; font-weight:700; color:var(--accent);" id="lbl-active-mission">
+              MISSION STATUS: IDLE
+            </span>
+            <span class="badge-live" id="lbl-mission-badge">READY</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" id="mission-progress-bar"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--text-muted);">
+            <span id="lbl-mission-sub">Workforce awaiting next assignment</span>
+            <a href="#" id="lnk-preview" target="_blank" style="color:var(--accent); text-decoration:none; display:none; font-weight:700;">
+              Open Preview App ↗
+            </a>
           </div>
         </div>
       </div>
     </main>
 
-    <!-- 3. Bottom Bar -->
-    <footer class="footer-bar">
-      <!-- Workforce Agent Badges -->
-      <div class="workforce-pills">
-        <div class="agent-status-badge">
-          <span class="pulse-dot"></span>
-          <span>ARCHITECT</span>
+    <!-- 3. 6 SPECIALIZED AGENTS WORKFORCE -->
+    <section>
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Autonomous AI Workforce</h2>
+          <p class="section-desc">Six specialized roles executing in a dependency-ordered Directed Acyclic Graph (DAG)</p>
         </div>
-        <div class="agent-status-badge">
-          <span class="pulse-dot"></span>
-          <span>DESIGNER</span>
-        </div>
-        <div class="agent-status-badge">
-          <span class="pulse-dot"></span>
-          <span>DEVELOPER</span>
-        </div>
-        <div class="agent-status-badge">
-          <span class="pulse-dot"></span>
-          <span>TESTER</span>
-        </div>
-        <div class="agent-status-badge">
-          <span class="pulse-dot"></span>
-          <span>SECURITY</span>
-        </div>
+        <span class="badge-live">6/6 Agents Active</span>
       </div>
 
-      <!-- Center Scroll Down Trigger -->
-      <a href="#workforce-section" class="scroll-down-btn" id="scroll-down-indicator" onclick="smoothScrollTo('workforce-section')">
-        <span class="scroll-mouse-icon">
-          <span class="scroll-wheel"></span>
-        </span>
-        <span id="center-hint-label">Scroll Down to Explore</span>
-        <svg class="scroll-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </a>
-
-      <!-- Live Telemetry Toggle Button -->
-      <button class="btn-toggle-console" onclick="toggleTelemetryDrawer()">
-        <span>Mission Telemetry</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="18 15 12 9 6 15"></polyline>
-        </svg>
-      </button>
-    </footer>
-  </div>
-
-  <!-- Below-the-Fold Dashboard Sections -->
-  <div class="dashboard-sections-wrapper" id="below-fold-content">
-    
-    <!-- 1. Multi-Agent Workforce Topology Section -->
-    <section class="content-section" id="workforce-section">
-      <div class="section-header-box">
-        <div class="section-pill-tag">
-          <span class="pulse-dot"></span>
-          <span>AUTONOMOUS ENGINEERING WORKFORCE</span>
-        </div>
-        <h2 class="section-heading-lg">Specialized Multi-Agent Workforce</h2>
-        <p class="section-subtitle-p">
-          OMNIFORGE replaces fragmented chatbots with a coordinated 5-stage DAG workforce that writes real code, generates design systems, and runs mathematical verification tests.
-        </p>
-      </div>
-
-      <div class="workforce-grid">
+      <div class="agents-grid">
         <!-- COMMANDER -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">👑</span>
-            <div class="agent-card-title">
-              <span>COMMANDER</span>
-              <span class="agent-card-badge">ORCHESTRATOR</span>
-            </div>
-            <p class="agent-card-desc">
-              Parses high-level user missions into ordered Directed Acyclic Graph (DAG) task trees and coordinates handoffs across agents.
-            </p>
+        <div class="agent-card" id="card-commander">
+          <div class="agent-top">
+            <div class="agent-icon">🧠</div>
+            <span class="agent-status-badge" id="badge-commander">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>Stage 1: Intent & Prompt Decomposition</li>
-            <li>Stage 2: DAG Task Planning & Scheduling</li>
-            <li>Stage 5: Final Delivery to Switch Room</li>
-          </ul>
+          <div class="agent-name">COMMANDER</div>
+          <p class="agent-role">Chief orchestration, task breakdown, DAG planning, and delivery to team chat.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-commander">
+            Output: DAG Task Graph
+          </div>
         </div>
 
         <!-- ARCHITECT -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">🏛️</span>
-            <div class="agent-card-title">
-              <span>ARCHITECT</span>
-              <span class="agent-card-badge">TOPOLOGY</span>
-            </div>
-            <p class="agent-card-desc">
-              Designs software blueprints, component structures, API contracts, and technology stack choices before coding starts.
-            </p>
+        <div class="agent-card" id="card-architect">
+          <div class="agent-top">
+            <div class="agent-icon">📐</div>
+            <span class="agent-status-badge" id="badge-architect">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>Outputs: ARCHITECTURE.md Blueprint</li>
-            <li>Dependency Graph Mapping</li>
-            <li>Modularity & Security Enforcements</li>
-          </ul>
+          <div class="agent-name">ARCHITECT</div>
+          <p class="agent-role">System architecture, tech stack selection, data flow, and file hierarchies.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-architect">
+            Output: ARCHITECTURE.md
+          </div>
         </div>
 
         <!-- DESIGNER -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">🎨</span>
-            <div class="agent-card-title">
-              <span>DESIGNER</span>
-              <span class="agent-card-badge">UI / UX TOKENS</span>
-            </div>
-            <p class="agent-card-desc">
-              Establishes design tokens, high-tech color palettes, typography scales, glassmorphism aesthetics, and 3D interactions.
-            </p>
+        <div class="agent-card" id="card-designer">
+          <div class="agent-top">
+            <div class="agent-icon">🎨</div>
+            <span class="agent-status-badge" id="badge-designer">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>Outputs: DESIGN_SYSTEM.md</li>
-            <li>3D Hardware Parallax Tokens</li>
-            <li>Micro-interaction Spring Curves</li>
-          </ul>
+          <div class="agent-name">DESIGNER</div>
+          <p class="agent-role">Design engineering, ui-skills tokens, responsive layout, and typography.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-designer">
+            Output: DESIGN_SYSTEM.md
+          </div>
         </div>
 
         <!-- DEVELOPER -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">💻</span>
-            <div class="agent-card-title">
-              <span>DEVELOPER</span>
-              <span class="agent-card-badge">CODE SYNTHESIS</span>
-            </div>
-            <p class="agent-card-desc">
-              Implements clean, production-ready frontend and backend code across dedicated mission workspaces in isolated directory jails.
-            </p>
+        <div class="agent-card" id="card-developer">
+          <div class="agent-top">
+            <div class="agent-icon">💻</div>
+            <span class="agent-status-badge" id="badge-developer">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>Generates HTML5, CSS3, ES6 JavaScript</li>
-            <li>Implements Responsive Viewports</li>
-            <li>State Management & Event Handlers</li>
-          </ul>
+          <div class="agent-name">DEVELOPER</div>
+          <p class="agent-role">Autonomous code synthesis in isolated sandbox with zero AI placeholder slop.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-developer">
+            Output: Codebase (.html, .css, .js)
+          </div>
         </div>
 
         <!-- TESTER -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">🧪</span>
-            <div class="agent-card-title">
-              <span>TESTER</span>
-              <span class="agent-card-badge">EVIDENCE VERIFIER</span>
-            </div>
-            <p class="agent-card-desc">
-              Validates JavaScript/HTML syntax, AST integrity, token compliance, and executes automated pytest & headless test suites.
-            </p>
+        <div class="agent-card" id="card-tester">
+          <div class="agent-top">
+            <div class="agent-icon">🧪</div>
+            <span class="agent-status-badge" id="badge-tester">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>AST Parsing & Code Syntax Check</li>
-            <li>Automated Unit Test Suite Runner</li>
-            <li>Mathematical Evidence Proof Generation</li>
-          </ul>
+          <div class="agent-name">TESTER</div>
+          <p class="agent-role">AST syntax parsing, bracket validation, unit test execution in sandbox.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-tester">
+            Output: VERIFICATION_REPORT.md
+          </div>
         </div>
 
-        <!-- SECURITY -->
-        <div class="agent-spec-card">
-          <div>
-            <span class="agent-card-icon">🛡️</span>
-            <div class="agent-card-title">
-              <span>SECURITY GUARD</span>
-              <span class="agent-card-badge">STATIC AUDIT</span>
-            </div>
-            <p class="agent-card-desc">
-              Audits synthesized code for path traversals, prompt injection attacks, unsanitized inputs, and enforces sandboxing policies.
-            </p>
+        <!-- SECURITY GUARD -->
+        <div class="agent-card" id="card-security">
+          <div class="agent-top">
+            <div class="agent-icon">🛡️</div>
+            <span class="agent-status-badge" id="badge-security">IDLE</span>
           </div>
-          <ul class="agent-card-duties">
-            <li>Path Traversal & Jail Protection</li>
-            <li>XSS & Code Injection Scanner</li>
-            <li>Outputs: SECURITY_AUDIT.md</li>
-          </ul>
+          <div class="agent-name">SECURITY GUARD</div>
+          <p class="agent-role">8-level permission policy gate, secret leak prevention, command sandbox audit.</p>
+          <div style="font-family:var(--font-mono); font-size:0.72rem; color:var(--text-faint);" id="info-security">
+            Output: SECURITY_AUDIT.md
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- 2. Unified Multi-Platform Transports Section -->
-    <section class="content-section" id="platforms-section">
-      <div class="section-header-box">
-        <div class="section-pill-tag">
-          <span class="pulse-dot"></span>
-          <span>SWITCH AI INTEGRATIONS</span>
-        </div>
-        <h2 class="section-heading-lg">Unified Chat Platform Connectors</h2>
-        <p class="section-subtitle-p">
-          One central AI workforce connected to Telegram, Discord, and Slack via Switch Shared Rooms. Commands and milestone reports are synchronized in real time.
-        </p>
-      </div>
-
-      <div class="platforms-grid">
-        <!-- Telegram Card -->
-        <div class="platform-card" style="border-top: 3px solid #229ed9;">
-          <div>
-            <div class="platform-header">
-              <span class="platform-name">
-                <span>✈️</span>
-                <span>Telegram Bot</span>
-              </span>
-              <span class="platform-status-badge" style="background: rgba(34, 158, 217, 0.2); color: #38bdf8;">
-                ● LIVE (@rio_claw_bot)
-              </span>
-            </div>
-            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: 12px;">
-              Long-polling bridge listening for user commands (<code>/start</code>, <code>/status</code>, or any mission task) and echoing real-time milestones.
-            </p>
+    <!-- 4. REAL-TIME TELEMETRY & CROSS-PLATFORM ROOM -->
+    <section>
+      <div class="telemetry-split">
+        <!-- Live Terminal Stream -->
+        <div class="console-panel">
+          <div class="console-header">
+            <span>📟 LIVE WORKFORCE TELEMETRY (WEBSOCKETS)</span>
+            <span style="color:var(--accent);">● STREAMING</span>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <a href="https://t.me/rio_claw_bot" target="_blank" class="deliverable-cta-btn" style="flex: 1; background: #229ed9;">
-              Chat on Telegram ↗
-            </a>
-            <button class="btn-sim-channel btn-sim-telegram" onclick="simulatePlatform('telegram')">
-              Simulate
-            </button>
+          <div class="console-body" id="telemetry-log">
+            <div class="log-entry COMMANDER">
+              <span class="log-time">12:00:00</span>
+              <span class="log-agent">[SYSTEM]</span>
+              <span>OMNIFORGE Engine online. Connected to Switch AI Gateway.</span>
+            </div>
+            <div class="log-entry SECURITY">
+              <span class="log-time">12:00:01</span>
+              <span class="log-agent">[SECURITY]</span>
+              <span>Workspace sandboxing active. Environment sanitized of host credentials.</span>
+            </div>
           </div>
         </div>
 
-        <!-- Discord Card -->
-        <div class="platform-card" style="border-top: 3px solid #5865f2;">
-          <div>
-            <div class="platform-header">
-              <span class="platform-name">
-                <span>👾</span>
-                <span>Discord Bot</span>
-              </span>
-              <span class="platform-status-badge" style="background: rgba(88, 101, 242, 0.2); color: #818cf8;">
-                ● LIVE (rio-dev#2111)
-              </span>
+        <!-- Switch Shared Room Stream -->
+        <div class="console-panel">
+          <div class="console-header">
+            <span>🔄 SWITCH SHARED ROOM (#rio-devteam)</span>
+            <span style="color:var(--success);">● CROSS-PLATFORM MESH</span>
+          </div>
+          <div class="console-body" id="switch-chat-log">
+            <div class="chat-bubble">
+              <div class="chat-head">
+                <span style="font-weight:700;">TechLead</span>
+                <span class="platform-tag telegram">Telegram</span>
+              </div>
+              <p style="font-size:0.82rem; color:#e2e8f0;">@rio_claw_bot workforce connected to shared dev room.</p>
             </div>
-            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: 12px;">
-              Direct Gateway WebSocket bridge with Slash command and mention triggers (<code>!forge</code> or <code>@rio-dev</code>).
-            </p>
-          </div>
-          <div style="display: flex; gap: 8px;">
-            <a href="https://discord.com/oauth2/authorize?client_id=1567447333250011167&permissions=277025507328&scope=bot" target="_blank" class="deliverable-cta-btn" style="flex: 1; background: #5865f2;">
-              Invite to Discord ↗
-            </a>
-            <button class="btn-sim-channel btn-sim-discord" onclick="simulatePlatform('discord')">
-              Simulate
-            </button>
-          </div>
-        </div>
-
-        <!-- Slack Card -->
-        <div class="platform-card" style="border-top: 3px solid #ecb22e;">
-          <div>
-            <div class="platform-header">
-              <span class="platform-name">
-                <span>💬</span>
-                <span>Slack App</span>
-              </span>
-              <span class="platform-status-badge" style="background: rgba(236, 178, 46, 0.2); color: #facc15;">
-                ● READY FOR TOKEN
-              </span>
+            <div class="chat-bubble">
+              <div class="chat-head">
+                <span style="font-weight:700;">rio-dev Bot</span>
+                <span class="platform-tag discord">Discord</span>
+              </div>
+              <p style="font-size:0.82rem; color:#e2e8f0;">Ready to execute missions dispatched from #dev-forge.</p>
             </div>
-            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: 12px;">
-              Incoming Webhook and Slash Command bridge. Fully supported in Zero-Token Simulation Mode with instant UI trigger testing.
-            </p>
           </div>
-          <div style="display: flex; gap: 8px;">
-            <button class="deliverable-cta-btn" style="flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);" onclick="openTokensModal()">
-              Add Token
-            </button>
-            <button class="btn-sim-channel btn-sim-slack" onclick="simulatePlatform('slack')">
-              Simulate
-            </button>
-          </div>
-        </div>
-
-        <!-- Switch Shared Room Card -->
-        <div class="platform-card" style="border-top: 3px solid #00f0ff;">
-          <div>
-            <div class="platform-header">
-              <span class="platform-name">
-                <span>⚡</span>
-                <span>Switch Shared Room</span>
-              </span>
-              <span class="platform-status-badge" style="background: rgba(0, 240, 255, 0.2); color: #00f0ff;">
-                #rio-devteam ACTIVE
-              </span>
-            </div>
-            <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-top: 12px;">
-              Unified collaboration bus powered by Switch. Routes agent events across all channels simultaneously so the entire team stays in sync.
-            </p>
-          </div>
-          <button class="deliverable-cta-btn" style="background: #00f0ff; color: #090a10;" onclick="toggleTelemetryDrawer()">
-            View Telemetry & Room Feed
-          </button>
         </div>
       </div>
     </section>
-
-    <!-- 3. Deliverables & Interactive Showcase Section -->
-    <section class="content-section" id="deliverables-section">
-      <div class="section-header-box">
-        <div class="section-pill-tag">
-          <span class="pulse-dot"></span>
-          <span>SYNTHESIZED DELIVERABLES & PREVIEWS</span>
-        </div>
-        <h2 class="section-heading-lg">Verified Code & Interactive Showcases</h2>
-        <p class="section-subtitle-p">
-          Explore the interactive products and code synthesized by the OMNIFORGE workforce, including the 3D sneaker reference page and real-time verified workspaces.
-        </p>
-      </div>
-
-      <div class="deliverables-grid">
-        <!-- Planet Sneaker Reference -->
-        <div class="deliverable-card">
-          <div style="font-size: 2.2rem;">👟</div>
-          <h3 style="font-size: 1.3rem; font-weight: 800;">3D Sneaker Showcase [Planet]</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-            Interactive product landing page built from your reference image, complete with 3D mouse parallax tilt physics, color palette swatches, and order modal.
-          </p>
-          <a href="/planet" target="_blank" class="deliverable-cta-btn">
-            Open Sneaker Showcase ↗
-          </a>
-        </div>
-
-        <!-- Workspace Deliverables Directory -->
-        <div class="deliverable-card">
-          <div style="font-size: 2.2rem;">📂</div>
-          <h3 style="font-size: 1.3rem; font-weight: 800;">Mission Workspaces Directory</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-            Live isolated workspaces containing all generated HTML, CSS, JavaScript, and markdown reports synthesized during hackathon runs.
-          </p>
-          <a href="/preview" target="_blank" class="deliverable-cta-btn" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-            Browse Workspace Artifacts ↗
-          </a>
-        </div>
-
-        <!-- Verification Report & Evidence -->
-        <div class="deliverable-card">
-          <div style="font-size: 2.2rem;">🧪</div>
-          <h3 style="font-size: 1.3rem; font-weight: 800;">Mathematical Verification Proof</h3>
-          <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
-            Automated AST parser and test harness outputs proving 100% test pass rates and zero syntax defects across synthesized deliverables.
-          </p>
-          <button class="deliverable-cta-btn" onclick="toggleTelemetryDrawer()">
-            Inspect Verification Evidence
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Site Footer -->
-    <footer class="site-footer">
-      <div>
-        <strong>OMNIFORGE</strong> · Autonomous AI Workforce Orchestration Platform · Flip the Switch Hackathon
-      </div>
-      <button class="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-        ↑ Back to Top
-      </button>
-    </footer>
   </div>
 
-  <!-- Telemetry Slide-Up Console Drawer -->
-  <div class="telemetry-drawer" id="telemetry-drawer">
-    <div class="drawer-header">
-      <div class="drawer-title">
-        <span class="pulse-dot"></span>
-        <span>OMNIFORGE MISSION TELEMETRY & WEBSOCKET EVENT STREAM</span>
+  <!-- =========================================================================
+       5. FULL CONNECTORS & SECRETS VAULT MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="vault-modal">
+    <div class="vault-modal">
+      <div class="vault-header">
+        <div class="vault-title">
+          <span>⚙️</span>
+          <span>Connectors & API Keys Vault</span>
+        </div>
+        <button class="btn btn-sm btn-vault" onclick="closeVaultModal()">✕ Close</button>
       </div>
-      <button class="drawer-close" onclick="toggleTelemetryDrawer()">✕</button>
-    </div>
-    <div class="drawer-body">
-      <!-- Real-time Event Stream -->
-      <div class="drawer-logs" id="telemetry-log">
-        <div class="log-item">
-          <span style="color:#9ca3af">00:00:00</span>
-          <span class="log-agent">[SYSTEM]</span>
-          <span>Connected to OMNIFORGE FastAPI Event Bus. Awaiting mission command.</span>
+
+      <div class="vault-tabs">
+        <button class="vault-tab active" onclick="switchVaultTab('telegram')">✈️ Telegram</button>
+        <button class="vault-tab" onclick="switchVaultTab('discord')">👾 Discord</button>
+        <button class="vault-tab" onclick="switchVaultTab('slack')">💬 Slack</button>
+        <button class="vault-tab" onclick="switchVaultTab('switch')">🔄 Switch AI</button>
+        <button class="vault-tab" onclick="switchVaultTab('providers')">🤖 LLM Providers</button>
+        <button class="vault-tab" onclick="switchVaultTab('security')">🛡️ Master Auth</button>
+      </div>
+
+      <div class="vault-body">
+        <!-- TAB 1: TELEGRAM -->
+        <div class="tab-content active" id="tab-telegram">
+          <div class="form-group">
+            <label class="form-label">
+              <span>Telegram Bot Token</span>
+              <span class="form-hint">Obtain from @BotFather</span>
+            </label>
+            <div class="input-row">
+              <input type="password" id="input-tg-token" class="form-input" placeholder="e.g. 8504088466:AAGUsazZrs9T10o..." />
+              <button class="btn-test" onclick="testCredential('telegram')">⚡ Test Bot</button>
+            </div>
+            <div class="test-result-box" id="result-telegram"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Telegram Bot Username</label>
+            <input type="text" id="input-tg-user" class="form-input" placeholder="@rio_claw_bot" value="@rio_claw_bot" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Default Chat / Channel ID (Optional)</label>
+            <input type="text" id="input-tg-chat" class="form-input" placeholder="e.g. -1001234567890" />
+          </div>
+        </div>
+
+        <!-- TAB 2: DISCORD -->
+        <div class="tab-content" id="tab-discord">
+          <div class="form-group">
+            <label class="form-label">
+              <span>Discord Bot Token</span>
+              <span class="form-hint">From Discord Developer Portal > Bot</span>
+            </label>
+            <div class="input-row">
+              <input type="password" id="input-discord-token" class="form-input" placeholder="e.g. MTIzNDU2Nzg5MDEyMzQ1Ng..." />
+              <button class="btn-test" onclick="testCredential('discord')">⚡ Test Gateway</button>
+            </div>
+            <div class="test-result-box" id="result-discord"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Discord Application ID</label>
+            <input type="text" id="input-discord-app-id" class="form-input" placeholder="e.g. 1567447333250011167" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Default Guild / Channel ID (Optional)</label>
+            <input type="text" id="input-discord-channel" class="form-input" placeholder="e.g. 123456789012345678" />
+          </div>
+        </div>
+
+        <!-- TAB 3: SLACK -->
+        <div class="tab-content" id="tab-slack">
+          <div class="form-group">
+            <label class="form-label">
+              <span>Slack Bot Token</span>
+              <span class="form-hint">xoxb-... from api.slack.com</span>
+            </label>
+            <input type="password" id="input-slack-token" class="form-input" placeholder="xoxb-..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Slack Signing Secret</label>
+            <input type="password" id="input-slack-secret" class="form-input" placeholder="Slack App Signing Secret" />
+          </div>
+        </div>
+
+        <!-- TAB 4: SWITCH AI GATEWAY -->
+        <div class="tab-content" id="tab-switch">
+          <div class="form-group">
+            <label class="form-label">
+              <span>Switch AI API Key</span>
+              <span class="form-hint">From your Switch AI account</span>
+            </label>
+            <div class="input-row">
+              <input type="password" id="input-switch-key" class="form-input" placeholder="Leave blank for zero-token simulation mode" />
+              <button class="btn-test" onclick="testCredential('switch')">⚡ Ping Gateway</button>
+            </div>
+            <div class="test-result-box" id="result-switch"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Switch Gateway URL</label>
+            <input type="text" id="input-switch-url" class="form-input" value="http://localhost:8000/api/switch" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Switch Webhook Shared Secret</label>
+            <input type="password" id="input-switch-secret" class="form-input" placeholder="Optional shared webhook secret" />
+          </div>
+        </div>
+
+        <!-- TAB 5: LLM PROVIDERS -->
+        <div class="tab-content" id="tab-providers">
+          <div class="form-group">
+            <label class="form-label">Active Autonomous Coding Driver</label>
+            <select class="form-input" id="input-active-driver">
+              <option value="opencode">OpenCode Driver (High Velocity)</option>
+              <option value="codex">Codex Hybrid Driver</option>
+              <option value="mock">Local Autonomous Mock Engine (Zero-Cost)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">OpenAI API Key (Optional)</label>
+            <input type="password" id="input-openai-key" class="form-input" placeholder="sk-..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Anthropic Claude API Key (Optional)</label>
+            <input type="password" id="input-anthropic-key" class="form-input" placeholder="sk-ant-..." />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Google Gemini API Key (Optional)</label>
+            <input type="password" id="input-gemini-key" class="form-input" placeholder="AIzaSy..." />
+          </div>
+        </div>
+
+        <!-- TAB 6: MASTER SECURITY AUTH -->
+        <div class="tab-content" id="tab-security">
+          <div class="form-group">
+            <label class="form-label">
+              <span>OMNIFORGE API Key</span>
+              <span class="form-hint">Locks API endpoints with X-API-Key requirement</span>
+            </label>
+            <input type="password" id="input-omniforge-key" class="form-input" placeholder="Leave empty for open dev mode" />
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.5;">
+            When configured, all mission creations, cancellations, and sensitive actions will require this API key passed as <code style="color:var(--accent);">X-API-Key</code> or Bearer token.
+          </div>
         </div>
       </div>
 
-      <!-- Workspace Artifacts Preview & Live App Preview -->
-      <div>
-        <div id="preview-cta-container"></div>
-        <h4 style="font-size: 0.85rem; font-family: var(--font-mono); margin-bottom: 10px; color: var(--theme-accent);">
-          SYNTHESIZED DELIVERABLES
-        </h4>
-        <div class="drawer-artifacts" id="telemetry-artifacts">
-          <div class="artifact-card">
-            <span>📄 ARCHITECTURE.md</span>
-            <span style="color: #10b981;">VERIFIED</span>
-          </div>
-          <div class="artifact-card">
-            <span>📄 DESIGN_SYSTEM.md</span>
-            <span style="color: #10b981;">VERIFIED</span>
-          </div>
-          <div class="artifact-card">
-            <span>📄 index.html</span>
-            <span style="color: #10b981;">SYNTHESIZED</span>
-          </div>
-          <div class="artifact-card">
-            <span>📄 VERIFICATION_REPORT.md</span>
-            <span style="color: #10b981;">PASSED (3/3)</span>
-          </div>
-        </div>
+      <div class="vault-footer">
+        <span style="font-size:0.8rem; color:var(--text-muted);">
+          Credentials are saved to runtime memory &amp; browser storage.
+        </span>
+        <button class="btn btn-primary" onclick="saveAllVaultCredentials()">
+          <span>💾 Save &amp; Hot-Reload Bridges</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Docker Engine & Bot Token Setup Modal -->
-  <div class="modal-overlay" id="tokens-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title">
-          <span>⚡</span>
-          <span>Docker Engine & Multi-Platform Connector Status</span>
-        </div>
-        <button class="modal-close-btn" onclick="closeTokensModal()">✕</button>
-      </div>
-
-      <div style="font-size: 0.9rem; line-height: 1.5; color: var(--text-muted);">
-        OMNIFORGE is configured in <strong style="color:#ffffff;">Zero-Token Simulation Mode</strong>. You do NOT need bot tokens to test and demo the entire multi-agent system across Telegram, Discord, and Slack right now!
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <div class="status-row">
-          <span style="font-family: var(--font-mono); font-size: 0.85rem;">🐳 Docker Desktop Engine</span>
-          <span style="color: #10b981; font-weight: 700; font-family: var(--font-mono);">● CONNECTED / OPEN</span>
-        </div>
-        <div class="status-row">
-          <span style="font-family: var(--font-mono); font-size: 0.85rem;">🔄 Switch Shared Room</span>
-          <span style="color: #00f0ff; font-weight: 700; font-family: var(--font-mono);">#rio-devteam ACTIVE</span>
-        </div>
-        <div class="status-row">
-          <span style="font-family: var(--font-mono); font-size: 0.85rem;">✈️ Telegram Bot (@rio_claw_bot)</span>
-          <span style="color: #10b981; font-weight: 700; font-family: var(--font-mono);">● LIVE & CONNECTED</span>
-        </div>
-        <div class="status-row">
-          <span style="font-family: var(--font-mono); font-size: 0.85rem;">👾 Discord Bot (rio-dev#2111)</span>
-          <span style="color: #10b981; font-weight: 700; font-family: var(--font-mono);">● LIVE & CONNECTED</span>
-        </div>
-        <div class="status-row">
-          <span style="font-family: var(--font-mono); font-size: 0.85rem;">💬 Slack Connector</span>
-          <span style="color: #facc15; font-weight: 700; font-family: var(--font-mono);">SIMULATOR READY</span>
-        </div>
-      </div>
-
-      <div style="background: rgba(0,0,0,0.35); border-radius: 8px; padding: 12px; font-family: var(--font-mono); font-size: 0.8rem; color: #94a3b8; line-height: 1.6;">
-        <strong style="color:#ffffff;">💡 Connecting Real Bot Tokens (When you want live bots):</strong><br>
-        Edit <code style="color:#00f0ff;">.env</code> in your project root and add:<br>
-        <span style="color:#38bdf8;">TELEGRAM_BOT_TOKEN</span>=... (from @BotFather)<br>
-        <span style="color:#818cf8;">DISCORD_BOT_TOKEN</span>=... (from Discord Developer Portal)<br>
-        <span style="color:#facc15;">SLACK_BOT_TOKEN</span>=... (from api.slack.com)<br>
-      </div>
-
-      <button class="btn-preview-live" onclick="closeTokensModal()">Got It — Continue Testing</button>
-    </div>
-  </div>
+  <!-- Toast Notification -->
+  <div id="toast-msg"></div>
 
   <script>
-    // Connector Configuration & Color Transitions
-    const CONNECTORS = {
-      discord: {
-        bgStart: '#232742',
-        bgEnd: '#0e101c',
-        accent: '#5865f2',
-        secondary: '#00f0ff',
-        glow: 'rgba(88, 101, 242, 0.45)',
-        badgeText: 'SWITCH GATEWAY · DISCORD BOT ONLINE',
-        iconSvg: 'M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09-.01-.02-.04-.03-.07-.03-1.5.26-2.93.71-4.27 1.33-.01 0-.02.01-.03.02-2.72 4.07-3.47 8.03-3.1 11.95 0 .02.01.04.03.05 1.8 1.32 3.53 2.12 5.24 2.65.03.01.06 0 .07-.02.4-.55.76-1.13 1.07-1.74.02-.04 0-.08-.04-.09-.57-.22-1.11-.48-1.64-.78-.04-.02-.04-.08-.01-.11.11-.08.22-.17.33-.25.02-.02.05-.02.07-.01 3.44 1.57 7.15 1.57 10.55 0 .02-.01.05-.01.07.01.11.09.22.17.33.26.04.03.04.08-.01.11-.52.31-1.07.56-1.64.78-.04.01-.05.06-.04.09.32.61.68 1.19 1.07 1.74.01.02.05.03.07.02 1.72-.53 3.45-1.33 5.25-2.65.02-.01.03-.03.03-.05.44-4.53-.73-8.46-3.1-11.95-.01-.01-.02-.02-.04-.02z'
-      },
-      telegram: {
-        bgStart: '#143852',
-        bgEnd: '#091824',
-        accent: '#229ed9',
-        secondary: '#38bdf8',
-        glow: 'rgba(34, 158, 217, 0.45)',
-        badgeText: 'SWITCH GATEWAY · TELEGRAM AGENT ONLINE',
-        iconSvg: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z'
-      },
-      slack: {
-        bgStart: '#3b2042',
-        bgEnd: '#1a0d1e',
-        accent: '#ecb22e',
-        secondary: '#e01e5a',
-        glow: 'rgba(236, 178, 46, 0.45)',
-        badgeText: 'SWITCH GATEWAY · SLACK WORKSPACE ONLINE',
-        iconSvg: 'M6 15a2 2 0 0 1-2 2 2 2 0 0 1-2-2 2 2 0 0 1 2-2h2v2zm1 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-5zm2-7a2 2 0 0 1-2-2 2 2 0 0 1 2-2 2 2 0 0 1 2 2v2H9zm0 1a2 2 0 0 1 2 2 2 2 0 0 1-2 2H4a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5zm7 2a2 2 0 0 1 2-2 2 2 0 0 1 2 2 2 2 0 0 1-2 2h-2v-2zm-1 0a2 2 0 0 1-2 2 2 2 0 0 1-2-2V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v5zm-2 7a2 2 0 0 1 2 2 2 2 0 0 1-2 2 2 2 0 0 1-2-2v-2h2zm0-1a2 2 0 0 1-2-2 2 2 0 0 1 2-2h5a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-5z'
-      },
-      switch: {
-        bgStart: '#0d383b',
-        bgEnd: '#061718',
-        accent: '#00f0ff',
-        secondary: '#10b981',
-        glow: 'rgba(0, 240, 255, 0.45)',
-        badgeText: 'SWITCH AI NATIVE ORCHESTRATOR ONLINE',
-        iconSvg: 'M13 2L3 14h9l-1 8 10-12h-9l1-8z'
-      }
-    };
+    // =========================================================================
+    // STATE & INITIALIZATION
+    // =========================================================================
+    let currentMissionId = null;
 
-    let activeConnector = 'discord';
-    let activeEngine = 'hybrid';
-
-    function setConnector(key) {
-      if (!CONNECTORS[key]) return;
-      activeConnector = key;
-      const c = CONNECTORS[key];
-
-      document.documentElement.style.setProperty('--theme-bg-start', c.bgStart);
-      document.documentElement.style.setProperty('--theme-bg-end', c.bgEnd);
-      document.documentElement.style.setProperty('--theme-accent', c.accent);
-      document.documentElement.style.setProperty('--theme-accent-secondary', c.secondary);
-      document.documentElement.style.setProperty('--theme-glow', c.glow);
-
-      document.querySelectorAll('.core-accent').forEach(el => {
-        el.setAttribute('fill', c.accent);
-        el.setAttribute('stroke', c.accent);
-      });
-
-      const iconPath = document.getElementById('core-icon-path');
-      if (iconPath) {
-        iconPath.setAttribute('d', c.iconSvg);
-        iconPath.setAttribute('fill', c.accent);
-      }
-
-      document.querySelectorAll('.connector-swatch').forEach(sw => sw.classList.remove('active'));
-      const activeSw = document.querySelector(`.swatch-${key}`);
-      if (activeSw) activeSw.classList.add('active');
-
-      document.getElementById('badge-connector-text').textContent = c.badgeText;
-      document.getElementById('center-hint-label').textContent = `${key.toUpperCase()} CONNECTOR READY`;
-
-      createParticleBurst(c.accent);
+    // Toast helper
+    function showToast(text, isError = false) {
+      const toast = document.getElementById('toast-msg');
+      toast.textContent = text;
+      toast.style.borderColor = isError ? 'var(--danger)' : 'var(--accent)';
+      toast.style.display = 'flex';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
     }
 
-    function selectEngine(element, engineKey) {
-      document.querySelectorAll('.engine-pill').forEach(p => p.classList.remove('active'));
-      element.classList.add('active');
-      activeEngine = engineKey;
-      addLogItem('SYSTEM', `Coding Engine switched to [${engineKey.toUpperCase()}]`);
+    // Theme Switcher
+    function changeTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      localStorage.setItem('omniforge_theme', themeName);
     }
 
-    // 3D Mouse Parallax Tracking
-    const coreWrapper = document.getElementById('core-wrapper');
-    const forgeBg = document.getElementById('forge-bg');
+    const savedTheme = localStorage.getItem('omniforge_theme');
+    if (savedTheme) {
+      document.getElementById('theme-selector').value = savedTheme;
+      changeTheme(savedTheme);
+    }
 
-    window.addEventListener('mousemove', (e) => {
-      const { innerWidth, innerHeight } = window;
-      const x = (e.clientX / innerWidth) - 0.5;
-      const y = (e.clientY / innerHeight) - 0.5;
+    // Presets
+    function applyPreset(text) {
+      document.getElementById('mission-prompt').value = text;
+      showToast('Preset loaded into mission input!');
+    }
 
-      const rotX = y * -20;
-      const rotY = x * 25;
-      const transY = y * 18;
+    // Modal tabs
+    function switchVaultTab(tabName) {
+      document.querySelectorAll('.vault-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      const btn = Array.from(document.querySelectorAll('.vault-tab')).find(b => b.textContent.toLowerCase().includes(tabName));
+      if (btn) btn.classList.add('active');
+      
+      const target = document.getElementById(`tab-${tabName}`);
+      if (target) target.classList.add('active');
+    }
 
-      if (coreWrapper) {
-        coreWrapper.style.transform = `
-          translate(${x * 35}px, ${transY}px)
-          rotateX(${rotX}deg)
-          rotateY(${rotY}deg)
-          rotate(-8deg)
-        `;
+    function openVaultModal(specificTab) {
+      document.getElementById('vault-modal').classList.add('active');
+      if (specificTab) {
+        switchVaultTab(specificTab);
       }
+      loadConnectorConfig();
+    }
 
-      if (forgeBg) {
-        forgeBg.style.transform = `
-          translate(${x * -25}px, ${y * -15}px)
-          perspective(1000px) rotateX(${4 + y * 6}deg)
-        `;
-      }
+    function closeVaultModal() {
+      document.getElementById('vault-modal').classList.remove('active');
+    }
+
+    // Close modal on Escape
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeVaultModal();
     });
 
-    // Telemetry Console Drawer Toggle
-    function toggleTelemetryDrawer() {
-      const drawer = document.getElementById('telemetry-drawer');
-      drawer.classList.toggle('open');
+    // =========================================================================
+    // CONNECTORS & CREDENTIALS API
+    // =========================================================================
+    async function loadConnectorConfig() {
+      try {
+        const res = await fetch('/api/connectors');
+        if (!res.ok) return;
+        const data = await res.json();
+        const c = data.connectors;
+
+        // Populate badges
+        if (c.telegram.is_running) {
+          document.getElementById('badge-tg-status').textContent = '● LIVE';
+          document.getElementById('badge-tg-status').className = 'badge-live';
+        } else if (c.telegram.is_configured) {
+          document.getElementById('badge-tg-status').textContent = 'CONFIGURED';
+          document.getElementById('badge-tg-status').className = 'badge-sim';
+        } else {
+          document.getElementById('badge-tg-status').textContent = 'OFFLINE';
+          document.getElementById('badge-tg-status').className = 'badge-sim';
+        }
+
+        if (c.discord.is_running) {
+          document.getElementById('badge-discord-status').textContent = '● LIVE';
+          document.getElementById('badge-discord-status').className = 'badge-live';
+        }
+
+        // Fill inputs from localStorage or current masked value
+        if (!document.getElementById('input-tg-token').value) {
+          document.getElementById('input-tg-token').value = localStorage.getItem('tg_token') || '';
+        }
+        if (!document.getElementById('input-discord-token').value) {
+          document.getElementById('input-discord-token').value = localStorage.getItem('discord_token') || '';
+        }
+        if (!document.getElementById('input-switch-key').value) {
+          document.getElementById('input-switch-key').value = localStorage.getItem('switch_key') || '';
+        }
+        if (!document.getElementById('input-openai-key').value) {
+          document.getElementById('input-openai-key').value = localStorage.getItem('openai_key') || '';
+        }
+      } catch (err) {
+        console.warn('Failed to load connector config:', err);
+      }
     }
 
-    function addLogItem(agent, message) {
+    async function testCredential(platform) {
+      const resultBox = document.getElementById(`result-${platform}`);
+      if (!resultBox) return;
+
+      resultBox.style.display = 'block';
+      resultBox.className = 'test-result-box';
+      resultBox.textContent = `Connecting to ${platform} API...`;
+
+      let token = '';
+      if (platform === 'telegram') token = document.getElementById('input-tg-token').value;
+      if (platform === 'discord') token = document.getElementById('input-discord-token').value;
+      if (platform === 'switch') token = document.getElementById('input-switch-key').value;
+
+      try {
+        const res = await fetch('/api/connectors/test', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ platform, token })
+        });
+        const data = await res.json();
+        if (data.success) {
+          resultBox.className = 'test-result-box success';
+          resultBox.textContent = `✓ ${data.message}`;
+          showToast(`Verified ${platform}!`);
+        } else {
+          resultBox.className = 'test-result-box error';
+          resultBox.textContent = `✗ ${data.message}`;
+          showToast(`Test failed for ${platform}`, true);
+        }
+      } catch (e) {
+        resultBox.className = 'test-result-box error';
+        resultBox.textContent = `✗ Request failed: ${e.message}`;
+      }
+    }
+
+    async function saveAllVaultCredentials() {
+      const tgToken = document.getElementById('input-tg-token').value;
+      const discordToken = document.getElementById('input-discord-token').value;
+      const discordAppId = document.getElementById('input-discord-app-id').value;
+      const slackToken = document.getElementById('input-slack-token').value;
+      const switchKey = document.getElementById('input-switch-key').value;
+      const switchUrl = document.getElementById('input-switch-url').value;
+      const omniforgeKey = document.getElementById('input-omniforge-key').value;
+      const openaiKey = document.getElementById('input-openai-key').value;
+      const driver = document.getElementById('input-active-driver').value;
+
+      // Persist in localStorage as local backup
+      if (tgToken) localStorage.setItem('tg_token', tgToken);
+      if (discordToken) localStorage.setItem('discord_token', discordToken);
+      if (switchKey) localStorage.setItem('switch_key', switchKey);
+      if (openaiKey) localStorage.setItem('openai_key', openaiKey);
+      if (omniforgeKey) localStorage.setItem('omniforge_key', omniforgeKey);
+
+      try {
+        const res = await fetch('/api/connectors/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegram_bot_token: tgToken || undefined,
+            discord_bot_token: discordToken || undefined,
+            discord_application_id: discordAppId || undefined,
+            slack_bot_token: slackToken || undefined,
+            switch_api_key: switchKey || undefined,
+            switch_gateway_url: switchUrl || undefined,
+            omniforge_api_key: omniforgeKey || undefined,
+            openai_api_key: openaiKey || undefined,
+            active_coding_driver: driver || undefined,
+          })
+        });
+        const data = await res.json();
+        showToast('✓ Credentials saved and bridges hot-reloaded!');
+        closeVaultModal();
+        loadConnectorConfig();
+      } catch (e) {
+        showToast(`Save error: ${e.message}`, true);
+      }
+    }
+
+    // =========================================================================
+    // MISSION DISPATCH & TELEMETRY
+    // =========================================================================
+    function setAgentState(agentName, state) {
+      const card = document.getElementById(`card-${agentName.toLowerCase()}`);
+      const badge = document.getElementById(`badge-${agentName.toLowerCase()}`);
+      if (!card || !badge) return;
+
+      badge.textContent = state;
+      if (state === 'WORKING' || state === 'PLANNING' || state === 'CODING' || state === 'VERIFYING') {
+        card.classList.add('running');
+        badge.className = 'agent-status-badge active';
+      } else if (state === 'COMPLETED' || state === 'CLEAN') {
+        card.classList.remove('running');
+        badge.className = 'agent-status-badge completed';
+      } else {
+        card.classList.remove('running');
+        badge.className = 'agent-status-badge';
+      }
+    }
+
+    function addTelemetryLog(agent, msg, isError = false) {
       const log = document.getElementById('telemetry-log');
-      const item = document.createElement('div');
-      item.className = 'log-item';
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${agent}`;
       const now = new Date().toTimeString().split(' ')[0];
-      item.innerHTML = `
-        <span style="color:#9ca3af">${now}</span>
+      entry.innerHTML = `
+        <span class="log-time">${now}</span>
         <span class="log-agent">[${agent}]</span>
-        <span>${message}</span>
+        <span>${msg}</span>
       `;
-      log.prepend(item);
+      log.prepend(entry);
     }
 
-    function setPresetPrompt(text) {
-      document.getElementById('quick-prompt').value = text;
-    }
-
-    function openTokensModal() {
-      document.getElementById('tokens-modal').classList.add('active');
-    }
-
-    function closeTokensModal() {
-      document.getElementById('tokens-modal').classList.remove('active');
-    }
-
-    function showPreviewLink(missionId) {
-      const container = document.getElementById('preview-cta-container');
-      if (!container) return;
-      container.innerHTML = `
-        <div class="preview-cta-card">
-          <div class="preview-cta-title">
-            <span class="pulse-dot"></span>
-            <span>MISSION SYNTHESIZED & VERIFIED (${missionId})</span>
-          </div>
-          <p style="font-size:0.75rem; color:#cbd5e1; margin:0;">
-            Multi-agent workforce completed code synthesis, security scan, and test suite.
-          </p>
-          <div style="display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;">
-            <a href="/preview/${missionId}/index.html" target="_blank" class="btn-preview-live" style="flex:1;">
-              🚀 Open Synthesized App ↗
-            </a>
-            <a href="/planet" target="_blank" class="btn-preview-live" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);">
-              👟 3D Sneaker [Ref]
-            </a>
-          </div>
+    function addSwitchChat(author, platform, content) {
+      const chat = document.getElementById('switch-chat-log');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      bubble.innerHTML = `
+        <div class="chat-head">
+          <span style="font-weight:700;">${author}</span>
+          <span class="platform-tag ${platform.toLowerCase()}">${platform}</span>
         </div>
+        <p style="font-size:0.82rem; color:#e2e8f0;">${content}</p>
       `;
+      chat.prepend(bubble);
     }
 
-    // Dispatch Mission via API
-    async function dispatchQuickMission() {
-      const prompt = document.getElementById('quick-prompt').value;
-      if (!prompt) return;
+    async function dispatchMission() {
+      const prompt = document.getElementById('mission-prompt').value.trim();
+      if (!prompt) {
+        showToast('Please enter a mission prompt.', true);
+        return;
+      }
 
-      addLogItem('COMMANDER', `Mission received from ${activeConnector.toUpperCase()}: "${prompt.substring(0, 40)}..."`);
-      toggleTelemetryDrawer();
+      const channel = document.getElementById('dispatch-channel').value;
+      const driver = document.getElementById('dispatch-driver').value;
+      const apiKey = localStorage.getItem('omniforge_key') || '';
+
+      document.getElementById('lbl-active-mission').textContent = 'MISSION: INITIALIZING...';
+      document.getElementById('lbl-mission-badge').textContent = 'DISPATCHED';
+      document.getElementById('mission-progress-bar').style.width = '15%';
+
+      setAgentState('commander', 'PLANNING');
+      addTelemetryLog('COMMANDER', `Mission dispatched via ${channel.toUpperCase()}: "${prompt.substring(0, 45)}..."`);
 
       try {
-        const resp = await fetch('/api/missions', {
+        const headers = { 'Content-Type': 'application/json' };
+        if (apiKey) headers['X-API-Key'] = apiKey;
+
+        const res = await fetch('/api/missions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({
-            prompt: prompt,
-            platform: activeConnector,
-            channel_id: `${activeConnector}-general`
+            prompt,
+            title: prompt.substring(0, 50),
+            platform: channel,
+            channel_id: `${channel}-main`,
           })
         });
-        const res = await resp.json();
-        if (res.mission_id) {
-          showPreviewLink(res.mission_id);
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || 'Dispatch rejected');
         }
-        addLogItem('COMMANDER', 'Workforce assembled: Planning 5-stage DAG...');
-      } catch (e) {
-        addLogItem('ERROR', `Dispatch error: ${e}`);
+
+        const data = await res.json();
+        currentMissionId = data.mission_id;
+        document.getElementById('lbl-active-mission').textContent = `MISSION [${currentMissionId}]: RUNNING`;
+        showToast(`Mission accepted: ${currentMissionId}`);
+
+        // Update preview link
+        const previewLink = document.getElementById('lnk-preview');
+        previewLink.href = `/preview/${currentMissionId}/index.html`;
+        previewLink.style.display = 'inline-block';
+
+      } catch (err) {
+        showToast(`Dispatch failed: ${err.message}`, true);
+        addTelemetryLog('ERROR', err.message);
+        setAgentState('commander', 'IDLE');
       }
     }
 
-    async function simulatePlatform(platform, customPrompt) {
-      setConnector(platform);
-      const prompt = customPrompt || document.getElementById('quick-prompt').value;
-      if (!prompt) return;
+    // =========================================================================
+    // WEBSOCKET REAL-TIME SYNC
+    // =========================================================================
+    function connectEventBus() {
+      const loc = window.location;
+      const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
+      const wsUrl = `${proto}//${loc.host}/ws/events`;
+      const ws = new WebSocket(wsUrl);
 
-      addLogItem('SWITCH-GATEWAY', `[${platform.toUpperCase()} BOT] Inbound webhook received in Switch shared room`);
-      toggleTelemetryDrawer();
+      ws.onopen = () => {
+        document.getElementById('dot-gateway').className = 'status-dot';
+      };
 
-      try {
-        const resp = await fetch('/api/switch/simulate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            platform: platform,
-            message: prompt,
-            channel_name: 'devteam-shared-room',
-            sender_name: 'TechLead'
-          })
-        });
-        const res = await resp.json();
-        const missionId = res.result?.mission_id;
-        if (missionId) {
-          showPreviewLink(missionId);
-          addLogItem('COMMANDER', `Mission [${missionId}] accepted across Telegram, Discord & Slack shared room`);
-        }
-      } catch (e) {
-        addLogItem('ERROR', `Simulation error: ${e}`);
-      }
-    }
+      ws.onmessage = (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          const ag = payload.agent || 'SYSTEM';
+          const msg = payload.message || payload.event_type;
 
-    function openDispatchModal() {
-      dispatchQuickMission();
-    }
+          addTelemetryLog(ag, msg);
 
-    // Real-time WebSockets
-    const loc = window.location;
-    const wsProto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsUrl = `${wsProto}//${loc.host}/ws/events`;
-    let ws;
-
-    function initWebSocket() {
-      ws = new WebSocket(wsUrl);
-      ws.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        addLogItem(data.agent, data.message);
-        if (data.mission_id) {
-          showPreviewLink(data.mission_id);
+          // Update agent states based on lifecycle events
+          if (payload.event_type === 'task_started') {
+            setAgentState(ag, 'WORKING');
+            if (ag === 'DEVELOPER') document.getElementById('mission-progress-bar').style.width = '60%';
+            if (ag === 'TESTER') document.getElementById('mission-progress-bar').style.width = '80%';
+            if (ag === 'SECURITY') document.getElementById('mission-progress-bar').style.width = '90%';
+          } else if (payload.event_type === 'task_completed') {
+            setAgentState(ag, 'COMPLETED');
+          } else if (payload.event_type === 'mission_completed') {
+            document.getElementById('mission-progress-bar').style.width = '100%';
+            document.getElementById('lbl-active-mission').textContent = `MISSION [${payload.mission_id}]: VERIFIED`;
+            document.getElementById('lbl-mission-badge').textContent = 'COMPLETED';
+            document.getElementById('lbl-mission-badge').className = 'badge-live';
+            showToast('🎉 Mission completed & verified successfully!');
+          }
+        } catch (e) {
+          console.error('WS parse error:', e);
         }
       };
-      ws.onclose = function() {
-        setTimeout(initWebSocket, 3000);
+
+      ws.onclose = () => {
+        document.getElementById('dot-gateway').className = 'status-dot warning';
+        setTimeout(connectEventBus, 3000);
       };
     }
-    initWebSocket();
+
+    connectEventBus();
+    loadConnectorConfig();
 
     // Ambient Sparks Canvas
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
 
-    function resizeCanvas() {
+    function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', resize);
+    resize();
 
     class Particle {
-      constructor(x, y, color) {
-        this.x = x;
-        this.y = y;
-        this.radius = Math.random() * 3 + 1;
-        this.vx = (Math.random() - 0.5) * 5;
-        this.vy = (Math.random() - 0.5) * 5;
-        this.alpha = 0.8;
-        this.color = color || '#5865f2';
-        this.decay = Math.random() * 0.01 + 0.006;
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.5 + 0.2;
       }
       update() {
-        this.x += this.vx;
-        this.y += this.vy;
-        this.alpha -= this.decay;
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
       }
       draw() {
-        ctx.save();
-        ctx.globalAlpha = Math.max(0, this.alpha);
-        ctx.fillStyle = this.color;
+        ctx.fillStyle = `rgba(0, 240, 255, ${this.opacity})`;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
       }
     }
 
-    function createParticleBurst(color) {
-      const cx = window.innerWidth * 0.52;
-      const cy = window.innerHeight * 0.5;
-      for (let i = 0; i < 35; i++) {
-        particles.push(new Particle(cx, cy, color));
-      }
+    for (let i = 0; i < 45; i++) {
+      particles.push(new Particle());
     }
 
-    function animateParticles() {
+    function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
+      particles.forEach(p => {
         p.update();
         p.draw();
-        if (p.alpha <= 0) particles.splice(i, 1);
-      }
-      requestAnimationFrame(animateParticles);
+      });
+      requestAnimationFrame(animate);
     }
-    animateParticles();
-    function smoothScrollTo(id) {
-      const el = document.getElementById(id);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
+    animate();
   </script>
 </body>
 </html>
