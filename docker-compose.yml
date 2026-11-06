@@ -1,0 +1,56 @@
+services:
+  omniforge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: omniforge-core
+    ports:
+      - "8000:8000"
+    environment:
+      - SWITCH_API_KEY=${SWITCH_API_KEY:-}
+      - SWITCH_GATEWAY_URL=${SWITCH_GATEWAY_URL:-http://localhost:8000/api/switch}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN:-}
+      - DATABASE_URL=postgresql+asyncpg://omniforge:omniforge_secret@postgres:5432/omniforge_db
+      - REDIS_URL=redis://redis:6379/0
+      - WORKSPACE_DIR=/app/workspaces
+    volumes:
+      - ./workspaces:/app/workspaces
+      - ./apps:/app/apps
+      - ./core:/app/core
+      - ./integrations:/app/integrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: omniforge-postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-omniforge}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-omniforge_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-omniforge_db}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omniforge -d omniforge_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: omniforge-redis
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

@@ -1,0 +1,3 @@
+[submodule "switch-core"]
+	path = switch-core
+	url = https://github.com/sandbox-quantum/switch.git
